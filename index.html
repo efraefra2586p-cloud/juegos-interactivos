@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Juegos Interactivos</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c5cff">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true">
+  <span class="bg-shape shape-1">⭐</span>
+  <span class="bg-shape shape-2">🎈</span>
+  <span class="bg-shape shape-3">☁️</span>
+  <span class="bg-shape shape-4">⭐</span>
+  <span class="bg-shape shape-5">🌈</span>
+  <span class="bg-shape shape-6">☁️</span>
+</div>
+
+<div id="app">
+
+  <!-- Pantalla 1: selector de perfil (tarjetas generadas por main.js) -->
+  <section id="screen-profile" class="screen active">
+    <span class="mascot" aria-hidden="true">🦊</span>
+    <h1 class="app-title">🎮 Juegos Interactivos</h1>
+    <p class="subtitle">¿Quién va a jugar?</p>
+    <div class="profile-grid" id="profile-grid"></div>
+  </section>
+
+  <!-- Pantalla: crear jugador nuevo -->
+  <section id="screen-add-profile" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-addprofile-back" title="Volver">⬅️</button>
+      <span class="game-header-title">Nuevo jugador</span>
+      <span class="header-spacer"></span>
+    </header>
+
+    <p class="subtitle">¿Cómo te llamas?</p>
+    <input type="text" id="addprofile-name" class="name-input" maxlength="14" placeholder="Tu nombre">
+
+    <p class="subtitle">Elige tu avatar</p>
+    <div class="avatar-grid" id="addprofile-avatars"></div>
+
+    <p class="subtitle">¿Qué tan grande eres?</p>
+    <div class="archetype-grid">
+      <button class="archetype-card archetype-small" data-age="5">
+        <span class="archetype-emoji">🌱</span>
+        <span class="archetype-label">Chiquito</span>
+      </button>
+      <button class="archetype-card archetype-big" data-age="8">
+        <span class="archetype-emoji">🚀</span>
+        <span class="archetype-label">Grande</span>
+      </button>
+    </div>
+
+    <button class="big-btn" id="btn-addprofile-create">✅ Crear</button>
+  </section>
+
+  <!-- Pantalla 2: menú principal -->
+  <section id="screen-menu" class="screen">
+    <header class="menu-header">
+      <button class="icon-btn" id="btn-change-profile" title="Cambiar jugador">🔄</button>
+      <div class="menu-title">
+        <span id="menu-profile-emoji">🐣</span>
+        <span id="menu-stars" class="stars-total">⭐ 0</span>
+      </div>
+      <button class="icon-btn" id="btn-speak-menu" title="Escuchar">🔊</button>
+    </header>
+
+    <h2 class="menu-heading">Elige un juego</h2>
+
+    <div class="game-grid">
+      <button class="game-card" data-game="memorama">
+        <span class="game-emoji">🃏</span>
+        <span class="game-label">Memorama</span>
+      </button>
+      <button class="game-card" data-game="sumas">
+        <span class="game-emoji">➕</span>
+        <span class="game-label">Sumas y Restas</span>
+      </button>
+      <button class="game-card" data-game="colores">
+        <span class="game-emoji">🎨</span>
+        <span class="game-label">Colores</span>
+      </button>
+      <button class="game-card" data-game="carrera">
+        <span class="game-emoji">🚗</span>
+        <span class="game-label">Esquiva Autos</span>
+      </button>
+      <button class="game-card" data-game="frutas">
+        <span class="game-emoji">🍎</span>
+        <span class="game-label">Atrapa Frutas</span>
+      </button>
+      <button class="game-card" data-game="laberinto">
+        <span class="game-emoji">🌀</span>
+        <span class="game-label">Laberinto</span>
+      </button>
+      <button class="game-card" data-game="ingles">
+        <span class="game-emoji">🌎</span>
+        <span class="game-label">Inglés</span>
+      </button>
+      <button class="game-card" data-game="rompecabezas">
+        <span class="game-emoji">🧩</span>
+        <span class="game-label">Rompecabezas</span>
+      </button>
+      <button class="game-card" data-game="abecedario">
+        <span class="game-emoji">🔤</span>
+        <span class="game-label">Abecedario</span>
+      </button>
+      <button class="game-card" data-game="buencorazon">
+        <span class="game-emoji">💛</span>
+        <span class="game-label">Buen Corazón</span>
+      </button>
+      <button class="game-card" data-game="sonidos">
+        <span class="game-emoji">🔊</span>
+        <span class="game-label">Sonidos</span>
+      </button>
+      <button class="game-card" data-game="culturavial">
+        <span class="game-emoji">🚦</span>
+        <span class="game-label">Cultura Vial</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Pantalla de nivel (compartida por todos los juegos) -->
+  <section id="screen-level" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-level-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title" id="level-game-title">Elige el nivel</span>
+      <button class="icon-btn" id="btn-level-speak" title="Escuchar">🔊</button>
+    </header>
+    <div class="level-grid">
+      <button class="level-card level-facil" data-level="facil">
+        <span class="level-emoji">🙂</span>
+        <span class="level-label">Fácil</span>
+      </button>
+      <button class="level-card level-medio" data-level="medio">
+        <span class="level-emoji">😎</span>
+        <span class="level-label">Medio</span>
+      </button>
+      <button class="level-card level-dificil" data-level="dificil">
+        <span class="level-emoji">🔥</span>
+        <span class="level-label">Difícil</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Pantalla: memorama -->
+  <section id="screen-memorama" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-memorama-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🃏 Memorama</span>
+      <button class="icon-btn" id="btn-memorama-restart" title="Jugar de nuevo">🔁</button>
+    </header>
+    <div id="memorama-board" class="memorama-board"></div>
+    <div id="memorama-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="memorama-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-memorama-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-memorama-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: sumas y restas -->
+  <section id="screen-sumas" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-sumas-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">➕ Sumas y Restas</span>
+      <button class="icon-btn" id="btn-sumas-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="sumas-progress" class="mini-progress"></p>
+    <div id="sumas-problem" class="sumas-problem"></div>
+    <div id="sumas-choices" class="sumas-choices"></div>
+    <div id="sumas-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="sumas-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-sumas-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-sumas-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: clasificar por colores -->
+  <section id="screen-colores" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-colores-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🎨 Colores</span>
+      <button class="icon-btn" id="btn-colores-speak" title="Escuchar">🔊</button>
+    </header>
+    <div id="colores-dropzones" class="colores-dropzones"></div>
+    <div id="colores-tray" class="colores-tray"></div>
+    <div id="colores-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="colores-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-colores-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-colores-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: esquiva autos -->
+  <section id="screen-carrera" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-carrera-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🚗 Esquiva Autos</span>
+      <button class="icon-btn" id="btn-carrera-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="carrera-progress" class="mini-progress"></p>
+    <canvas id="carrera-canvas" class="carrera-canvas"></canvas>
+    <div class="carrera-controls">
+      <button class="wide-btn" id="btn-carrera-left" aria-label="Izquierda">⬅️</button>
+      <button class="wide-btn" id="btn-carrera-right" aria-label="Derecha">➡️</button>
+    </div>
+    <div id="carrera-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="carrera-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-carrera-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-carrera-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: atrapa frutas -->
+  <section id="screen-frutas" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-frutas-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🍎 Atrapa Frutas</span>
+      <button class="icon-btn" id="btn-frutas-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="frutas-progress" class="mini-progress"></p>
+    <canvas id="frutas-canvas" class="carrera-canvas"></canvas>
+    <div class="carrera-controls">
+      <button class="wide-btn" id="btn-frutas-left" aria-label="Izquierda">⬅️</button>
+      <button class="wide-btn" id="btn-frutas-right" aria-label="Derecha">➡️</button>
+    </div>
+    <div id="frutas-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="frutas-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-frutas-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-frutas-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: laberinto -->
+  <section id="screen-laberinto" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-laberinto-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🌀 Laberinto</span>
+      <button class="icon-btn" id="btn-laberinto-hint" title="Pista">🔦</button>
+    </header>
+    <div id="laberinto-grid" class="tile-grid"></div>
+    <div class="laberinto-controls">
+      <div class="dpad-row">
+        <span class="dpad-spacer"></span>
+        <button class="wide-btn" id="btn-laberinto-up" aria-label="Arriba">⬆️</button>
+        <span class="dpad-spacer"></span>
+      </div>
+      <div class="dpad-row">
+        <button class="wide-btn" id="btn-laberinto-left" aria-label="Izquierda">⬅️</button>
+        <button class="wide-btn" id="btn-laberinto-down" aria-label="Abajo">⬇️</button>
+        <button class="wide-btn" id="btn-laberinto-right" aria-label="Derecha">➡️</button>
+      </div>
+    </div>
+    <div id="laberinto-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="laberinto-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-laberinto-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-laberinto-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: inglés -->
+  <section id="screen-ingles" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-ingles-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🌎 Inglés</span>
+      <button class="icon-btn" id="btn-ingles-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="ingles-progress" class="mini-progress"></p>
+    <div id="ingles-prompt" class="ingles-prompt"></div>
+    <div id="ingles-choices" class="ingles-choices"></div>
+    <div id="ingles-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="ingles-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-ingles-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-ingles-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: rompecabezas -->
+  <section id="screen-rompecabezas" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-rompecabezas-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🧩 Rompecabezas</span>
+      <button class="icon-btn" id="btn-rompecabezas-restart" title="Barajar de nuevo">🔁</button>
+    </header>
+    <div id="rompecabezas-grid" class="tile-grid"></div>
+    <div id="rompecabezas-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="rompecabezas-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-rompecabezas-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-rompecabezas-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: abecedario -->
+  <section id="screen-abecedario" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-abecedario-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🔤 Abecedario</span>
+      <button class="icon-btn" id="btn-abecedario-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="abecedario-progress" class="mini-progress"></p>
+    <div id="abecedario-prompt" class="ingles-prompt"></div>
+    <div id="abecedario-choices" class="sumas-choices"></div>
+    <div id="abecedario-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="abecedario-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-abecedario-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-abecedario-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: buen corazón -->
+  <section id="screen-buencorazon" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-buencorazon-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">💛 Buen Corazón</span>
+      <button class="icon-btn" id="btn-buencorazon-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="buencorazon-progress" class="mini-progress"></p>
+    <div id="buencorazon-prompt" class="ingles-prompt"></div>
+    <div id="buencorazon-choices" class="bc-choices"></div>
+    <div id="buencorazon-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="buencorazon-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-buencorazon-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-buencorazon-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: sonidos -->
+  <section id="screen-sonidos" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-sonidos-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🔊 Sonidos</span>
+      <button class="icon-btn" id="btn-sonidos-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="sonidos-progress" class="mini-progress"></p>
+    <div id="sonidos-prompt" class="ingles-prompt"></div>
+    <div id="sonidos-choices" class="ingles-choices"></div>
+    <div id="sonidos-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="sonidos-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-sonidos-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-sonidos-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pantalla: cultura vial -->
+  <section id="screen-culturavial" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-culturavial-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title">🚦 Cultura Vial</span>
+      <button class="icon-btn" id="btn-culturavial-speak" title="Escuchar">🔊</button>
+    </header>
+    <p id="culturavial-progress" class="mini-progress"></p>
+    <div id="culturavial-prompt" class="ingles-prompt"></div>
+    <div id="culturavial-choices" class="bc-choices"></div>
+    <div id="culturavial-win" class="win-panel hidden">
+      <p class="win-title">¡Lo lograste! 🎉</p>
+      <p id="culturavial-win-stars" class="win-stars"></p>
+      <div class="win-actions">
+        <button class="big-btn" id="btn-culturavial-again">🔁 Otra vez</button>
+        <button class="big-btn" id="btn-culturavial-menu">🏠 Menú</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/confetti.js"></script>
+<script src="js/games/memorama.js"></script>
+<script src="js/games/sumas.js"></script>
+<script src="js/games/colores.js"></script>
+<script src="js/games/carrera.js"></script>
+<script src="js/games/frutas.js"></script>
+<script src="js/games/laberinto.js"></script>
+<script src="js/games/ingles.js"></script>
+<script src="js/games/rompecabezas.js"></script>
+<script src="js/games/abecedario.js"></script>
+<script src="js/games/buencorazon.js"></script>
+<script src="js/games/sonidos.js"></script>
+<script src="js/games/culturavial.js"></script>
+<script src="js/main.js"></script>
+<script>
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
