@@ -97,21 +97,33 @@ const AbecedarioGame = (() => {
       speakRoundPrompt(roundData.correct.word);
 
       els.choices.innerHTML = "";
+      Feedback.hide(els.choices);
+      let errs = 0;
       roundData.options.forEach((entry) => {
         const btn = document.createElement("button");
         btn.className = "choice-btn abc-letter-btn";
         btn.textContent = entry.letter;
+        btn.dataset.letter = entry.letter;
         btn.addEventListener("click", () => {
           if (btn.disabled) return;
           if (entry.letter === roundData.correct.letter) {
             els.choices.querySelectorAll("button").forEach((b) => (b.disabled = true));
             btn.classList.add("choice-correct");
+            Feedback.hide(els.choices);
             GameAudio.playMatch();
             setTimeout(nextRound, 700);
           } else {
-            GameAudio.playClick();
-            btn.classList.add("choice-shake");
-            setTimeout(() => btn.classList.remove("choice-shake"), 400);
+            // guía amable: qué letra tocó y cómo encontrar la correcta
+            errs++;
+            btn.disabled = true;
+            btn.classList.add("choice-wrong");
+            const w = roundData.correct.word;
+            if (errs >= 2) {
+              els.choices.querySelector(`[data-letter="${roundData.correct.letter}"]`).classList.add("choice-hint");
+              Feedback.show(els.choices, "Mira la que brilla", `${w} empieza con la ${roundData.correct.letter}. Fíjate en la primera letra de ${w}.`);
+            } else {
+              Feedback.show(els.choices, "Esa no es", `La ${entry.letter} es de ${entry.word}. Escucha con qué sonido empieza ${w} y prueba otra vez.`);
+            }
           }
         });
         els.choices.appendChild(btn);

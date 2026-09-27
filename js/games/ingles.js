@@ -89,6 +89,7 @@ const InglesGame = (() => {
       const btn = document.createElement("button");
       btn.className = "ingles-picture-btn";
       btn.textContent = word.emoji;
+      btn.dataset.en = word.en;
       btn.addEventListener("click", () => handleAnswer(btn, word, round.correct, els));
       els.choices.appendChild(btn);
     });
@@ -109,6 +110,7 @@ const InglesGame = (() => {
       const btn = document.createElement("button");
       btn.className = "choice-btn ingles-word-btn";
       btn.textContent = word.en;
+      btn.dataset.en = word.en;
       btn.addEventListener("click", () => handleAnswer(btn, word, round.correct, els));
       els.choices.appendChild(btn);
     });
@@ -119,34 +121,48 @@ const InglesGame = (() => {
     if (word.en === correct.en) {
       els.choices.querySelectorAll("button").forEach((b) => (b.disabled = true));
       btn.classList.add("choice-correct");
+      Feedback.hide(els.choices);
       GameAudio.playMatch();
       setTimeout(() => Speech.speak(correct.es, undefined, () => setTimeout(els.onCorrect, 400)), 250);
     } else {
-      GameAudio.playClick();
-      btn.classList.add("choice-shake");
-      setTimeout(() => btn.classList.remove("choice-shake"), 400);
+      // dice qué era lo que tocó (en español) y vuelve a sonar la palabra en inglés
+      els.errs = (els.errs || 0) + 1;
+      btn.disabled = true;
+      btn.classList.add("choice-wrong");
+      const replay = () => Speech.speakEnglish(correct.en);
+      if (els.errs >= 2) {
+        const right = Array.from(els.choices.querySelectorAll("button")).find((b) => b.dataset.en === correct.en);
+        if (right) right.classList.add("choice-hint");
+        Feedback.show(els.choices, "Mira el que brilla", "Esa es la palabra que escuchaste. Escucha otra vez.", replay);
+      } else {
+        Feedback.show(els.choices, "Casi", `Eso es “${word.en}”, que significa ${word.es.toLowerCase()}. Escucha otra vez la palabra que buscamos.`, replay);
+      }
     }
   }
 
   function start(ageGroup, level, els) {
     const byProfile = DIFFICULTY[ageGroup] || DIFFICULTY["5"];
     const diff = byProfile[level] || byProfile.medio;
+    // ganchos opcionales para reutilizarlo dentro de Aventuras
+    const rounds = els.rounds || diff.rounds;
+    const categories = els.categories || diff.categories;
     const pictureMode = ageGroup === "5";
     let round = 0;
     els.win.classList.add("hidden");
 
     function updateProgress() {
-      els.progress.textContent = `${round} / ${diff.rounds}`;
+      els.progress.textContent = `${round} / ${rounds}`;
+      if (els.onProgress) els.onProgress(round, rounds);
     }
 
     function nextRound() {
-      if (round >= diff.rounds) {
+      if (round >= rounds) {
         finish();
         return;
       }
       round++;
       updateProgress();
-      const roundData = pickRound(diff.categories, diff.choices);
+      const roundData = pickRound(categories, diff.choices);
       const runtimeEls = { prompt: els.prompt, choices: els.choices, onCorrect: nextRound };
       if (pictureMode) renderPictureMode(runtimeEls, roundData);
       else renderWordMode(runtimeEls, roundData);
@@ -162,6 +178,7 @@ const InglesGame = (() => {
       els.winStars.textContent = "⭐".repeat(stars);
       els.win.classList.remove("hidden");
       Confetti.burst(els.win);
+      if (els.onComplete) els.onComplete();
       currentWord = null;
     }
 

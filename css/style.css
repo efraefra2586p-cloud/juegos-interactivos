@@ -19,7 +19,11 @@
   --wall-color: #5a4a7a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  /* evita que un doble toque rápido haga zoom en la pantalla (iOS/Android) */
+  touch-action: manipulation;
+}
 
 html, body {
   margin: 0;
@@ -522,7 +526,10 @@ button:active { transform: scale(0.96); }
   border-radius: 20px;
   box-shadow: 0 8px 0 var(--shadow);
   touch-action: none;
-  max-width: 100%;
+  /* se adapta al ancho Y al alto disponible (celular, tablet, laptop);
+     la proporción 300x440 del canvas se conserva con height:auto */
+  width: max(240px, min(100%, 380px, calc((100vh - 250px) * 0.68)));
+  height: auto;
 }
 .carrera-canvas.hidden { display: none; }
 
@@ -765,9 +772,98 @@ button:active { transform: scale(0.96); }
   opacity: 0.7;
 }
 
+/* ---------- Categorías del menú y explicación de niveles ---------- */
+.category-card { min-height: 170px; flex-basis: 150px; }
+.category-count { font-size: 14px; color: var(--purple); font-weight: bold; }
+.category-blurb {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 17px;
+  max-width: 420px;
+}
+
+.level-explain {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: var(--white);
+  border-radius: 16px;
+  border: 3px solid var(--purple);
+  font-size: 16px;
+  line-height: 1.35;
+  text-align: center;
+}
+.level-text { display: flex; flex-direction: column; text-align: left; gap: 2px; }
+.level-desc { font-size: 14px; font-weight: normal; opacity: 0.95; }
+.level-note {
+  width: 100%;
+  max-width: 380px;
+  margin: 18px 0 0;
+  font-size: 15px;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* ---------- Feedback que enseña (opción equivocada + pista) ---------- */
+.feedback-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 420px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: #fff7e0;
+  border: 3px solid var(--yellow);
+  border-radius: 18px;
+  text-align: left;
+  animation: popIn 0.25s ease;
+}
+.feedback-box.hidden { display: none; }
+.feedback-title { font-weight: bold; font-size: 17px; color: var(--orange-dark); }
+.feedback-detail { font-size: 16px; line-height: 1.35; }
+
+.choice-btn.choice-wrong,
+.ingles-picture-btn.choice-wrong,
+.bc-option-btn.choice-wrong {
+  background: #ffe9d6;
+  border-color: var(--orange);
+  color: var(--text);
+  opacity: 0.75;
+}
+.choice-btn.choice-hint,
+.ingles-picture-btn.choice-hint,
+.bc-option-btn.choice-hint {
+  animation: hintGlow 1s ease-in-out infinite;
+  border-color: var(--green);
+}
+@keyframes hintGlow {
+  0%, 100% { box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 0 0 0 rgba(78,203,113,0.7); }
+  50% { box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 0 0 10px rgba(78,203,113,0); }
+}
+
 /* ---------- Responsivo ---------- */
 @media (min-width: 700px) {
   .screen { padding-top: 40px; }
+  /* tablet / laptop: tarjetas más grandes en 2 columnas, no 4 chiquitas en fila */
+  #category-grid, #category-games { max-width: 600px; }
+  #category-grid .game-card, #category-games .game-card { flex: 1 1 250px; }
+  .game-card { min-height: 190px; padding: 30px 24px; }
+  .game-emoji { font-size: 72px; }
+  .game-label { font-size: 24px; }
+  .category-count { font-size: 16px; }
+  .menu-heading { font-size: 32px; }
+  .level-grid, .level-explain, .level-note { max-width: 520px; }
+  .level-card { padding: 24px 30px; }
+  .level-card .level-label { font-size: 26px; }
+  .level-desc { font-size: 16px; }
+  .level-explain { font-size: 18px; }
+  .bc-choices, .feedback-box { max-width: 520px; }
+  .ingles-prompt { padding: 30px 48px; }
+  .icon-btn { width: 64px; height: 64px; font-size: 30px; }
+  .game-header-title { font-size: 28px; }
+  .menu-title { font-size: 26px; }
 }
 
 @media (max-width: 380px) {

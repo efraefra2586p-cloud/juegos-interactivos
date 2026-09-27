@@ -116,23 +116,56 @@ const SumasGame = (() => {
     currentSpokenText = `¿Cuánto es ${problem.a} ${opWord} ${problem.b}?`;
   }
 
-  function renderChoices(elChoices, choices, correctAnswer, onCorrect) {
+  // Cómo se resuelve, sin dar el resultado (para la primera pista).
+  function strategyText(problem, useObjects) {
+    if (problem.op === "+") {
+      return useObjects
+        ? "Cuenta todas las manzanas juntas."
+        : `Empieza en ${problem.a} y cuenta ${problem.b} más.`;
+    }
+    if (problem.op === "-") {
+      return useObjects
+        ? "Cuenta solo las manzanas que NO están tachadas."
+        : `Empieza en ${problem.a} y quita ${problem.b}.`;
+    }
+    return `${problem.a} por ${problem.b} es sumar el ${problem.b}, ${problem.a} veces.`;
+  }
+
+  function solutionText(problem) {
+    const opWord = problem.op === "+" ? "más" : problem.op === "-" ? "menos" : "por";
+    return `${problem.a} ${opWord} ${problem.b} es ${problem.answer}.`;
+  }
+
+  function renderChoices(elChoices, choices, problem, useObjects, onCorrect) {
     elChoices.innerHTML = "";
+    Feedback.hide(elChoices);
+    let wrongCount = 0;
     choices.forEach((choice) => {
       const btn = document.createElement("button");
       btn.className = "choice-btn";
       btn.textContent = choice;
       btn.addEventListener("click", () => {
         if (btn.disabled) return;
-        if (choice === correctAnswer) {
+        if (choice === problem.answer) {
           elChoices.querySelectorAll(".choice-btn").forEach((b) => (b.disabled = true));
+          btn.classList.remove("choice-hint");
           btn.classList.add("choice-correct");
+          Feedback.hide(elChoices);
           GameAudio.playMatch();
           setTimeout(onCorrect, 450);
+          return;
+        }
+        wrongCount++;
+        GameAudio.playClick();
+        btn.disabled = true;
+        btn.classList.add("choice-wrong");
+        if (wrongCount === 1) {
+          const direction = choice > problem.answer ? "grande" : "pequeña";
+          Feedback.show(elChoices, `No es ${choice}.`, `Esa respuesta es muy ${direction}. ${strategyText(problem, useObjects)} ¡Inténtalo otra vez!`);
         } else {
-          GameAudio.playClick();
-          btn.classList.add("choice-shake");
-          setTimeout(() => btn.classList.remove("choice-shake"), 400);
+          const correctBtn = Array.from(elChoices.children).find((b) => Number(b.textContent) === problem.answer);
+          if (correctBtn) correctBtn.classList.add("choice-hint");
+          Feedback.show(elChoices, `Tampoco es ${choice}.`, `${solutionText(problem)} Toca la respuesta que brilla.`);
         }
       });
       elChoices.appendChild(btn);
@@ -142,15 +175,18 @@ const SumasGame = (() => {
   function start(ageGroup, level, els) {
     const byProfile = DIFFICULTY[ageGroup] || DIFFICULTY["5"];
     const diff = byProfile[level] || byProfile.medio;
+    // ganchos opcionales para reutilizarlo dentro de Aventuras
+    const rounds = els.rounds || diff.rounds;
     let round = 0;
     els.win.classList.add("hidden");
 
     function updateProgress() {
-      els.progress.textContent = `${round} / ${diff.rounds}`;
+      els.progress.textContent = `${round} / ${rounds}`;
+      if (els.onProgress) els.onProgress(round, rounds);
     }
 
     function nextRound() {
-      if (round >= diff.rounds) {
+      if (round >= rounds) {
         finish();
         return;
       }
@@ -159,7 +195,7 @@ const SumasGame = (() => {
       const problem = generateProblem(diff);
       renderProblem(els.problem, diff, problem);
       const choices = generateChoices(problem.answer, effectiveMax(diff, problem));
-      renderChoices(els.choices, choices, problem.answer, nextRound);
+      renderChoices(els.choices, choices, problem, diff.useObjects, nextRound);
     }
 
     function finish() {
@@ -168,10 +204,12 @@ const SumasGame = (() => {
       GameAudio.playCelebration();
       els.problem.innerHTML = "";
       els.choices.innerHTML = "";
+      Feedback.hide(els.choices);
       els.progress.textContent = "";
       els.winStars.textContent = "⭐".repeat(stars);
       els.win.classList.remove("hidden");
       Confetti.burst(els.win);
+      if (els.onComplete) els.onComplete();
       currentSpokenText = "";
     }
 

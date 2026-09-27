@@ -40,8 +40,6 @@ const CarreraGame = (() => {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = LOGICAL_W * dpr;
     canvas.height = LOGICAL_H * dpr;
-    canvas.style.width = LOGICAL_W + "px";
-    canvas.style.height = LOGICAL_H + "px";
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     return ctx;

@@ -78,23 +78,35 @@ const SonidosGame = (() => {
       Speech.speak(roundData.correct.sound);
 
       els.choices.innerHTML = "";
+      Feedback.hide(els.choices);
       els.choices.className = "ingles-choices ingles-choices-pictures";
+      let errs = 0;
       roundData.options.forEach((item) => {
         const btn = document.createElement("button");
         btn.className = "ingles-picture-btn";
         btn.textContent = item.emoji;
+        btn.dataset.name = item.name;
         btn.addEventListener("click", () => {
           if (btn.disabled) return;
           if (item.name === roundData.correct.name) {
             els.choices.querySelectorAll("button").forEach((b) => (b.disabled = true));
             btn.classList.add("choice-correct");
+            Feedback.hide(els.choices);
             GameAudio.playMatch();
             const praise = `Es un ${roundData.correct.name}`;
             setTimeout(() => Speech.speak(praise, undefined, () => setTimeout(nextRound, 400)), 300);
           } else {
-            GameAudio.playClick();
-            btn.classList.add("choice-shake");
-            setTimeout(() => btn.classList.remove("choice-shake"), 400);
+            // dice qué sonido hace lo que tocó y vuelve a sonar el original
+            errs++;
+            btn.disabled = true;
+            btn.classList.add("choice-wrong");
+            const replay = () => Speech.speak(roundData.correct.sound);
+            if (errs >= 2) {
+              els.choices.querySelector(`[data-name="${roundData.correct.name}"]`).classList.add("choice-hint");
+              Feedback.show(els.choices, "Mira el que brilla", "Ese es el que hace el sonido. Escucha otra vez.", replay);
+            } else {
+              Feedback.show(els.choices, "Ese no es", `El ${item.name} hace “${item.sound}”. Escucha otra vez el sonido.`, replay);
+            }
           }
         });
         els.choices.appendChild(btn);

@@ -35,6 +35,10 @@ const Storage = (() => {
       if (!p.emoji) p.emoji = EMOJI_BY_ID[id] || "🙂";
       if (!p.games) p.games = {};
       if (typeof p.stars !== "number") p.stars = 0;
+      // Apartado "Aventuras": "full" (todo) para el perfil "8" de fábrica,
+      // "lite" (versión reducida) para el "5". Los perfiles nuevos no lo
+      // tienen hasta que un adulto lo active. null = desactivado a propósito.
+      if (p.aventura === undefined) p.aventura = id === "8" ? "full" : id === "5" ? "lite" : null;
     });
     return state;
   }
@@ -42,7 +46,7 @@ const Storage = (() => {
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      if (!raw) return defaultState();
+      if (!raw) return migrate(defaultState());
       const parsed = JSON.parse(raw);
       const base = defaultState();
       const merged = {
@@ -52,7 +56,7 @@ const Storage = (() => {
       };
       return migrate(merged);
     } catch (e) {
-      return defaultState();
+      return migrate(defaultState());
     }
   }
 
@@ -78,7 +82,7 @@ const Storage = (() => {
 
   function createProfile(name, emoji, ageGroup) {
     const id = "p_" + Date.now().toString(36) + Math.floor(Math.random() * 1000);
-    state.profiles[id] = { name: name.trim() || "Jugador", emoji, ageGroup, stars: 0, games: {} };
+    state.profiles[id] = { name: name.trim() || "Jugador", emoji, ageGroup, stars: 0, games: {}, aventura: null };
     state.profileOrder.push(id);
     persist(state);
     return id;
@@ -134,7 +138,15 @@ const Storage = (() => {
     persist(state);
   }
 
+  function setAventura(profileId, mode) {
+    const p = state.profiles[profileId];
+    if (!p) return;
+    p.aventura = mode || null;
+    persist(state);
+  }
+
   return {
+    setAventura,
     get,
     listProfiles,
     createProfile,

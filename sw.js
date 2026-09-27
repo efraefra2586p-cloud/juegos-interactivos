@@ -6,16 +6,18 @@
 // IMPORTANTE: al agregar un archivo nuevo (ej. un juego nuevo en js/games/),
 // hay que sumarlo a APP_SHELL y subir CACHE_NAME (v1 -> v2...) para que los
 // dispositivos que ya instalaron la app bajen la versión nueva.
-const CACHE_NAME = "ji-cache-v3";
+const CACHE_NAME = "ji-cache-v6";
 const APP_SHELL = [
   "./",
   "index.html",
   "manifest.json",
   "css/style.css",
+  "css/aventura.css",
   "js/storage.js",
   "js/audio.js",
   "js/speech.js",
   "js/confetti.js",
+  "js/feedback.js",
   "js/main.js",
   "js/games/memorama.js",
   "js/games/sumas.js",
@@ -29,6 +31,18 @@ const APP_SHELL = [
   "js/games/buencorazon.js",
   "js/games/sonidos.js",
   "js/games/culturavial.js",
+  "js/aventura/store.js",
+  "js/aventura/core.js",
+  "js/aventura/games-atencion.js",
+  "js/aventura/games-letras.js",
+  "js/aventura/games-numeros.js",
+  "js/aventura/games-emociones.js",
+  "js/aventura/games-turnos.js",
+  "js/aventura/games-lectura.js",
+  "js/aventura/games-calculo.js",
+  "js/aventura/games-regulacion.js",
+  "js/aventura/games-orden.js",
+  "js/aventura/panel.js",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/icon-180.png"

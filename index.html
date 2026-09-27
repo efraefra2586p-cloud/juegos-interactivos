@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Juegos Interactivos</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/aventura.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#7c5cff">
 <link rel="icon" href="icons/icon-192.png">
@@ -29,6 +30,7 @@
     <h1 class="app-title">🎮 Juegos Interactivos</h1>
     <p class="subtitle">¿Quién va a jugar?</p>
     <div class="profile-grid" id="profile-grid"></div>
+    <button class="parents-link" id="btn-parents">🔒 Adultos</button>
   </section>
 
   <!-- Pantalla: crear jugador nuevo -->
@@ -71,58 +73,20 @@
       <button class="icon-btn" id="btn-speak-menu" title="Escuchar">🔊</button>
     </header>
 
-    <h2 class="menu-heading">Elige un juego</h2>
+    <h2 class="menu-heading">¿Qué quieres hacer hoy?</h2>
 
-    <div class="game-grid">
-      <button class="game-card" data-game="memorama">
-        <span class="game-emoji">🃏</span>
-        <span class="game-label">Memorama</span>
-      </button>
-      <button class="game-card" data-game="sumas">
-        <span class="game-emoji">➕</span>
-        <span class="game-label">Sumas y Restas</span>
-      </button>
-      <button class="game-card" data-game="colores">
-        <span class="game-emoji">🎨</span>
-        <span class="game-label">Colores</span>
-      </button>
-      <button class="game-card" data-game="carrera">
-        <span class="game-emoji">🚗</span>
-        <span class="game-label">Esquiva Autos</span>
-      </button>
-      <button class="game-card" data-game="frutas">
-        <span class="game-emoji">🍎</span>
-        <span class="game-label">Atrapa Frutas</span>
-      </button>
-      <button class="game-card" data-game="laberinto">
-        <span class="game-emoji">🌀</span>
-        <span class="game-label">Laberinto</span>
-      </button>
-      <button class="game-card" data-game="ingles">
-        <span class="game-emoji">🌎</span>
-        <span class="game-label">Inglés</span>
-      </button>
-      <button class="game-card" data-game="rompecabezas">
-        <span class="game-emoji">🧩</span>
-        <span class="game-label">Rompecabezas</span>
-      </button>
-      <button class="game-card" data-game="abecedario">
-        <span class="game-emoji">🔤</span>
-        <span class="game-label">Abecedario</span>
-      </button>
-      <button class="game-card" data-game="buencorazon">
-        <span class="game-emoji">💛</span>
-        <span class="game-label">Buen Corazón</span>
-      </button>
-      <button class="game-card" data-game="sonidos">
-        <span class="game-emoji">🔊</span>
-        <span class="game-label">Sonidos</span>
-      </button>
-      <button class="game-card" data-game="culturavial">
-        <span class="game-emoji">🚦</span>
-        <span class="game-label">Cultura Vial</span>
-      </button>
-    </div>
+    <div class="game-grid" id="category-grid"></div>
+  </section>
+
+  <!-- Pantalla: juegos de una categoría (tarjetas generadas por main.js) -->
+  <section id="screen-category" class="screen">
+    <header class="game-header">
+      <button class="icon-btn" id="btn-category-back" title="Volver al menú">⬅️</button>
+      <span class="game-header-title" id="category-title">Juegos</span>
+      <button class="icon-btn" id="btn-category-speak" title="Escuchar">🔊</button>
+    </header>
+    <p class="category-blurb" id="category-blurb"></p>
+    <div class="game-grid" id="category-games"></div>
   </section>
 
   <!-- Pantalla de nivel (compartida por todos los juegos) -->
@@ -132,20 +96,31 @@
       <span class="game-header-title" id="level-game-title">Elige el nivel</span>
       <button class="icon-btn" id="btn-level-speak" title="Escuchar">🔊</button>
     </header>
+    <p class="level-explain" id="level-explain"></p>
     <div class="level-grid">
       <button class="level-card level-facil" data-level="facil">
         <span class="level-emoji">🙂</span>
-        <span class="level-label">Fácil</span>
+        <span class="level-text">
+          <span class="level-label">Fácil</span>
+          <span class="level-desc">Para empezar y practicar</span>
+        </span>
       </button>
       <button class="level-card level-medio" data-level="medio">
         <span class="level-emoji">😎</span>
-        <span class="level-label">Medio</span>
+        <span class="level-text">
+          <span class="level-label">Medio</span>
+          <span class="level-desc">Un poco más de reto</span>
+        </span>
       </button>
       <button class="level-card level-dificil" data-level="dificil">
         <span class="level-emoji">🔥</span>
-        <span class="level-label">Difícil</span>
+        <span class="level-text">
+          <span class="level-label">Difícil</span>
+          <span class="level-desc">Para campeones</span>
+        </span>
       </button>
     </div>
+    <p class="level-note">⭐⭐⭐ Ganas las mismas estrellas en todos los niveles. Empieza por Fácil y sube cuando te salga sin errores.</p>
   </section>
 
   <!-- Pantalla: memorama -->
@@ -399,12 +374,21 @@
     </div>
   </section>
 
+  <!-- Apartado Aventuras (lo construye js/aventura/core.js) -->
+  <section id="screen-aventura" class="screen av-screen"></section>
+
+  <!-- Zona de adultos con PIN (lo construye js/aventura/panel.js) -->
+  <section id="screen-panel" class="screen pn-screen"></section>
+
 </div>
+
+<div id="av-report" class="av-report hidden"></div>
 
 <script src="js/storage.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/speech.js"></script>
 <script src="js/confetti.js"></script>
+<script src="js/feedback.js"></script>
 <script src="js/games/memorama.js"></script>
 <script src="js/games/sumas.js"></script>
 <script src="js/games/colores.js"></script>
@@ -417,6 +401,18 @@
 <script src="js/games/buencorazon.js"></script>
 <script src="js/games/sonidos.js"></script>
 <script src="js/games/culturavial.js"></script>
+<script src="js/aventura/store.js"></script>
+<script src="js/aventura/core.js"></script>
+<script src="js/aventura/games-atencion.js"></script>
+<script src="js/aventura/games-letras.js"></script>
+<script src="js/aventura/games-numeros.js"></script>
+<script src="js/aventura/games-emociones.js"></script>
+<script src="js/aventura/games-turnos.js"></script>
+<script src="js/aventura/games-lectura.js"></script>
+<script src="js/aventura/games-calculo.js"></script>
+<script src="js/aventura/games-regulacion.js"></script>
+<script src="js/aventura/games-orden.js"></script>
+<script src="js/aventura/panel.js"></script>
 <script src="js/main.js"></script>
 <script>
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
