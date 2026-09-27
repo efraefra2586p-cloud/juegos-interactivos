@@ -13,6 +13,7 @@
   --orange: #ff9248;
   --orange-dark: #ea741f;
   --red: #ff5d5d;
+  --red-dark: #c72e2e;
   --text: #3a2e57;
   --white: #ffffff;
   --shadow: rgba(60, 40, 90, 0.18);
@@ -36,7 +37,7 @@
   --wall-color: #8f7fd8;
   --panel: #291f52;
   --panel-alt: #322663;
-  --panel-line: rgba(255, 255, 255, 0.1);
+  --panel-line: rgba(255, 255, 255, 0.14);
   --gloss: rgba(255, 255, 255, 0.14);
   --gloss-soft: rgba(255, 255, 255, 0.07);
   --feedback-bg: #3a2f1a;
@@ -96,7 +97,7 @@ html[data-theme="dark"], html[data-theme="dark"] body {
   opacity: 0.35;
   animation: float 7s ease-in-out infinite;
 }
-:root[data-theme="dark"] .bg-shape { opacity: 0.22; filter: brightness(1.3); }
+:root[data-theme="dark"] .bg-shape { opacity: 0.28; filter: brightness(1.3); }
 .shape-1 { top: 8%;  left: 8%;  animation-delay: 0s; font-size: 28px; }
 .shape-2 { top: 18%; left: 82%; animation-delay: 1.2s; font-size: 36px; }
 .shape-3 { top: 65%; left: 4%;  animation-delay: 2.1s; font-size: 46px; }
@@ -143,7 +144,9 @@ html[data-theme="dark"], html[data-theme="dark"] body {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* ---------- Botones base (bisel + brillo superior, estilo "juego de mesa") ---------- */
+/* ---------- Botones base: molde "ficha de juego de mesa" — marco de dos
+   tonos (borde oscuro + relleno vivo), brillo diagonal arriba, sombra dura
+   plana debajo (el "grosor" de la ficha) y una sombra difusa de ambiente. ---------- */
 button {
   font-family: inherit;
   border: none;
@@ -153,19 +156,20 @@ button {
 button:active { transform: scale(0.96); }
 
 .icon-btn {
-  background: linear-gradient(180deg, var(--gloss) 0%, transparent 55%), var(--panel);
+  background: linear-gradient(180deg, var(--gloss) 0%, transparent 55%),
+              linear-gradient(160deg, var(--panel-alt) 0%, var(--panel) 100%);
   width: 56px;
   height: 56px;
   border-radius: 50%;
   font-size: 26px;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 4px 0 var(--shadow), 0 8px 14px var(--ambient-shadow);
-  border: 2px solid var(--panel-line);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.6), 0 4px 0 var(--shadow), 0 8px 14px var(--ambient-shadow);
+  border: 2.5px solid rgba(124, 92, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.15s ease;
 }
-:root[data-theme="dark"] .icon-btn { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.08), 0 4px 0 var(--shadow), 0 8px 14px var(--ambient-shadow); }
+:root[data-theme="dark"] .icon-btn { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 4px 0 var(--shadow), 0 8px 14px var(--ambient-shadow); border-color: rgba(180, 160, 255, 0.4); }
 .icon-btn:active { transform: scale(0.9) rotate(-6deg); }
 
 /* botón de tema claro/oscuro: mismo molde que icon-btn, un poco más chico.
@@ -189,35 +193,45 @@ button:active { transform: scale(0.96); }
 .menu-header-right { display: flex; align-items: center; gap: 8px; }
 
 .big-btn {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, transparent 45%),
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, transparent 50%),
               linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%);
   color: var(--white);
   font-size: 22px;
   font-weight: bold;
   padding: 18px 28px;
   border-radius: 20px;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 6px 0 rgba(0,0,0,0.18), 0 12px 20px var(--ambient-shadow);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 7px 0 #227a3f, 0 14px 22px var(--ambient-shadow);
   min-width: 160px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border: 3px solid #227a3f;
 }
 
-/* ---------- Pantalla de perfil ---------- */
+/* ---------- Título estilo "logo de juego": letras gruesas, degradado
+   dorado y contorno grueso de color, como un cartel de arcade. ---------- */
 .app-title {
-  font-size: clamp(28px, 6vw, 44px);
-  margin: 12px 0 4px;
+  font-size: clamp(30px, 7vw, 48px);
+  margin: 10px 0 4px;
   text-align: center;
   font-weight: 900;
   letter-spacing: 0.5px;
   color: var(--purple-dark);
-  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7), 0 1px 0 var(--purple);
+  text-shadow: 0 3px 0 rgba(60, 40, 90, 0.35);
 }
-:root[data-theme="dark"] .app-title {
-  color: #d9caff;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4), 0 0 18px rgba(124, 92, 255, 0.55);
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .app-title {
+    background: linear-gradient(180deg, #fff 0%, #ffe58f 45%, var(--yellow-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--purple-dark);
+    text-shadow: none;
+    filter: drop-shadow(0 3px 0 rgba(60, 40, 90, 0.4)) drop-shadow(0 10px 18px rgba(60, 40, 90, 0.3));
+  }
 }
+:root[data-theme="dark"] .app-title { filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(124, 92, 255, 0.5)); }
 .subtitle {
   font-size: clamp(18px, 4vw, 24px);
   margin: 0 0 24px;
+  font-weight: bold;
 }
 
 .profile-grid {
@@ -229,31 +243,56 @@ button:active { transform: scale(0.96); }
   max-width: 640px;
 }
 
+/* Tarjetas de perfil, categoría y juego: relleno de color sólido (no una
+   caja blanca con un borde de color) — esto es lo que le da el "look" de
+   juego en vez de panel de formulario. Cada tarjeta define --card-a/--card-b
+   (claro/oscuro del mismo tono) y hereda el mismo molde visual. */
 .profile-card {
-  background: linear-gradient(180deg, var(--gloss) 0%, transparent 40%), var(--panel);
+  --card-a: var(--pink);
+  --card-b: var(--pink-dark);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, transparent 42%),
+              linear-gradient(165deg, var(--card-a) 0%, var(--card-b) 100%);
   border-radius: 28px;
   padding: 28px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.55), 0 8px 0 var(--shadow), 0 16px 26px var(--ambient-shadow);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.5), 0 8px 0 rgba(0, 0, 0, 0.18), 0 18px 28px var(--ambient-shadow);
   flex: 1 1 180px;
   min-height: 180px;
   justify-content: center;
   transition: transform 0.15s ease;
   animation: popIn 0.4s ease backwards;
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  color: #fff;
 }
-:root[data-theme="dark"] .profile-card { box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.08), 0 8px 0 var(--shadow), 0 16px 26px var(--ambient-shadow); }
-.profile-card:nth-child(1) { border: 4px solid var(--pink); animation-delay: 0.05s; }
-.profile-card:nth-child(2) { border: 4px solid var(--blue); animation-delay: 0.15s; }
+.profile-card:nth-child(6n+1) { --card-a: var(--pink); --card-b: var(--pink-dark); animation-delay: 0.05s; }
+.profile-card:nth-child(6n+2) { --card-a: var(--blue); --card-b: var(--blue-dark); animation-delay: 0.15s; }
+.profile-card:nth-child(6n+3) { --card-a: var(--green); --card-b: var(--green-dark); animation-delay: 0.25s; }
+.profile-card:nth-child(6n+4) { --card-a: var(--orange); --card-b: var(--orange-dark); animation-delay: 0.35s; }
+.profile-card:nth-child(6n+5) { --card-a: var(--purple); --card-b: var(--purple-dark); animation-delay: 0.45s; }
+.profile-card:nth-child(6n+6) { --card-a: var(--red); --card-b: var(--red-dark); animation-delay: 0.55s; }
 .profile-card:active { transform: scale(0.95); }
 
-.profile-emoji { font-size: 64px; filter: drop-shadow(0 4px 4px rgba(60, 40, 90, 0.2)); }
+.profile-emoji { font-size: 64px; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25)); }
 .profile-label {
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 900;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
 }
+
+/* la tarjeta "Agregar" se queda neutral (no es un jugador, no debe competir
+   visualmente con las fichas de color) */
+.profile-card.profile-card-add {
+  background: linear-gradient(180deg, var(--gloss) 0%, transparent 40%), var(--panel);
+  border: 3px dashed var(--panel-line);
+  color: var(--text);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.4), 0 8px 0 var(--shadow), 0 16px 24px var(--ambient-shadow);
+  opacity: 0.9;
+}
+.profile-card.profile-card-add .profile-label { text-shadow: none; }
+.profile-card.profile-card-add .profile-emoji { filter: none; }
 
 /* ---------- Menú principal ---------- */
 .menu-header {
@@ -266,17 +305,20 @@ button:active { transform: scale(0.96); }
   margin-bottom: 8px;
 }
 
+/* insignia de estrellas: marco tipo "medidor de recursos" de juego, con un
+   anillo dorado grueso, no una simple píldora blanca */
 .menu-title {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: 22px;
-  font-weight: bold;
-  background: linear-gradient(180deg, var(--gloss) 0%, transparent 55%), var(--panel);
-  padding: 6px 20px 6px 6px;
+  font-weight: 900;
+  background: linear-gradient(180deg, var(--gloss) 0%, transparent 55%),
+              linear-gradient(160deg, var(--panel-alt) 0%, var(--panel) 100%);
+  padding: 6px 22px 6px 6px;
   border-radius: 999px;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 4px 0 var(--shadow), 0 8px 14px var(--ambient-shadow);
-  border: 2px solid var(--panel-line);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.55), 0 5px 0 var(--shadow), 0 10px 16px var(--ambient-shadow);
+  border: 2.5px solid rgba(240, 170, 0, 0.5);
 }
 
 /* insignia circular tipo "moneda" alrededor del avatar del header */
@@ -284,12 +326,12 @@ button:active { transform: scale(0.96); }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   font-size: 22px;
   background: radial-gradient(circle at 32% 26%, #fffbe8 0%, var(--yellow) 55%, var(--yellow-dark) 100%);
-  box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.22), inset 0 2px 2px rgba(255, 255, 255, 0.6), 0 2px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 -4px 5px rgba(0, 0, 0, 0.25), inset 0 2px 2px rgba(255, 255, 255, 0.65), 0 0 0 3px rgba(240, 170, 0, 0.35), 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 
 .stars-total {
@@ -303,7 +345,7 @@ button:active { transform: scale(0.96); }
   font-size: clamp(20px, 4.5vw, 28px);
   margin: 20px 0;
   text-align: center;
-  font-weight: 800;
+  font-weight: 900;
 }
 
 .game-grid {
@@ -316,38 +358,42 @@ button:active { transform: scale(0.96); }
 }
 
 .game-card {
-  background: linear-gradient(180deg, var(--gloss) 0%, transparent 45%), var(--panel);
+  --card-a: var(--purple);
+  --card-b: var(--purple-dark);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, transparent 42%),
+              linear-gradient(165deg, var(--card-a) 0%, var(--card-b) 100%);
   border-radius: 26px;
   padding: 26px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.55), 0 8px 0 var(--shadow), 0 16px 24px var(--ambient-shadow);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.18), 0 18px 26px var(--ambient-shadow);
   flex: 1 1 160px;
   min-height: 150px;
   justify-content: center;
-  border: 4px solid transparent;
+  border: 3px solid rgba(255, 255, 255, 0.5);
   transition: transform 0.15s ease;
   animation: popIn 0.35s ease backwards;
+  color: #fff;
 }
-:root[data-theme="dark"] .game-card { box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.08), 0 8px 0 var(--shadow), 0 16px 24px var(--ambient-shadow); }
 .game-card:active { transform: scale(0.95); }
-.game-card:nth-child(1) { border-color: var(--purple); animation-delay: 0.02s; }
-.game-card:nth-child(2) { border-color: var(--green); animation-delay: 0.06s; }
-.game-card:nth-child(3) { border-color: var(--orange); animation-delay: 0.1s; }
-.game-card:nth-child(4) { border-color: var(--pink); animation-delay: 0.14s; }
-.game-card:nth-child(5) { border-color: var(--red); animation-delay: 0.18s; }
-.game-card:nth-child(6) { border-color: var(--blue); animation-delay: 0.22s; }
-.game-card:nth-child(7) { border-color: var(--yellow-dark); animation-delay: 0.26s; }
-.game-card:nth-child(8) { border-color: var(--purple-dark); animation-delay: 0.3s; }
-.game-card:nth-child(9) { border-color: var(--green-dark); animation-delay: 0.34s; }
-.game-card:nth-child(10) { border-color: var(--yellow); animation-delay: 0.38s; }
-.game-card:nth-child(11) { border-color: var(--blue-dark); animation-delay: 0.42s; }
-.game-card:nth-child(12) { border-color: var(--orange-dark); animation-delay: 0.46s; }
+.game-card:nth-child(1)  { --card-a: var(--purple);      --card-b: var(--purple-dark); animation-delay: 0.02s; }
+.game-card:nth-child(2)  { --card-a: var(--green);       --card-b: var(--green-dark);  animation-delay: 0.06s; }
+.game-card:nth-child(3)  { --card-a: var(--orange);      --card-b: var(--orange-dark); animation-delay: 0.1s; }
+.game-card:nth-child(4)  { --card-a: var(--pink);        --card-b: var(--pink-dark);   animation-delay: 0.14s; }
+.game-card:nth-child(5)  { --card-a: var(--red);         --card-b: var(--red-dark);    animation-delay: 0.18s; }
+.game-card:nth-child(6)  { --card-a: var(--blue);        --card-b: var(--blue-dark);   animation-delay: 0.22s; }
+.game-card:nth-child(7)  { --card-a: var(--yellow);      --card-b: var(--yellow-dark); animation-delay: 0.26s; }
+.game-card:nth-child(8)  { --card-a: var(--purple-dark); --card-b: #4a2fb0;            animation-delay: 0.3s; }
+.game-card:nth-child(9)  { --card-a: var(--green-dark);  --card-b: #1f7a3d;            animation-delay: 0.34s; }
+.game-card:nth-child(10) { --card-a: var(--pink-dark);   --card-b: #c73169;            animation-delay: 0.38s; }
+.game-card:nth-child(11) { --card-a: var(--blue-dark);   --card-b: #16729e;            animation-delay: 0.42s; }
+.game-card:nth-child(12) { --card-a: var(--orange-dark); --card-b: #b8540f;            animation-delay: 0.46s; }
 
-.game-emoji { font-size: 52px; filter: drop-shadow(0 3px 3px rgba(60, 40, 90, 0.2)); }
-.game-label { font-size: 19px; font-weight: bold; text-align: center; }
+.game-emoji { font-size: 52px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.3)); }
+.game-label { font-size: 19px; font-weight: 900; text-align: center; text-shadow: 0 2px 3px rgba(0, 0, 0, 0.25); }
+.category-count { font-size: 14px; color: rgba(255, 255, 255, 0.9); font-weight: bold; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
 
 /* ---------- Selector de nivel ---------- */
 .level-grid {
@@ -366,18 +412,18 @@ button:active { transform: scale(0.96); }
   padding: 20px 26px;
   border-radius: 22px;
   color: var(--white);
-  font-weight: bold;
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 6px 0 rgba(0,0,0,0.18), 0 12px 20px var(--ambient-shadow);
+  font-weight: 900;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 7px 0 rgba(0, 0, 0, 0.22), 0 14px 22px var(--ambient-shadow);
   animation: popIn 0.35s ease backwards;
   transition: transform 0.15s ease;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border: 3px solid rgba(0, 0, 0, 0.15);
 }
 .level-card:active { transform: scale(0.96); }
-.level-card .level-emoji { font-size: 34px; }
-.level-card .level-label { font-size: 22px; }
-.level-facil   { background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 40%), linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); animation-delay: 0.02s; }
-.level-medio   { background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 40%), linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%); animation-delay: 0.1s; }
-.level-dificil { background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 40%), linear-gradient(135deg, var(--red) 0%, #c72e2e 100%); animation-delay: 0.18s; }
+.level-card .level-emoji { font-size: 34px; filter: drop-shadow(0 2px 3px rgba(0,0,0,.3)); }
+.level-card .level-label { font-size: 22px; text-shadow: 0 2px 3px rgba(0,0,0,.25); }
+.level-facil   { background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 40%), linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); border-color: #1f7a3d; animation-delay: 0.02s; }
+.level-medio   { background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 40%), linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%); border-color: #b8540f; animation-delay: 0.1s; }
+.level-dificil { background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 40%), linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%); border-color: #8f2020; animation-delay: 0.18s; }
 
 /* ---------- Header de juego ---------- */
 .game-header {
@@ -388,7 +434,7 @@ button:active { transform: scale(0.96); }
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.game-header-title { font-size: 22px; font-weight: bold; }
+.game-header-title { font-size: 22px; font-weight: 900; }
 
 /* ---------- Memorama ---------- */
 .memorama-board {
@@ -401,21 +447,24 @@ button:active { transform: scale(0.96); }
 
 .memo-card {
   aspect-ratio: 1 / 1;
-  background: var(--purple);
+  background: linear-gradient(160deg, rgba(255,255,255,.35) 0%, transparent 45%), linear-gradient(165deg, var(--purple) 0%, var(--purple-dark) 100%);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: clamp(28px, 7vw, 46px);
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.25), 0 5px 0 var(--shadow);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.3), 0 5px 0 rgba(0,0,0,.2);
   transition: transform 0.15s ease, background 0.15s ease;
+  border: 2px solid rgba(255,255,255,.4);
 }
 .memo-card.flipped, .memo-card.matched {
-  background: var(--panel);
+  background: linear-gradient(180deg, var(--gloss) 0%, transparent 45%), var(--panel);
+  border-color: var(--panel-line);
 }
 .memo-card.matched {
-  background: var(--green);
-  opacity: 0.85;
+  background: linear-gradient(160deg, rgba(255,255,255,.35) 0%, transparent 45%), linear-gradient(165deg, var(--green) 0%, var(--green-dark) 100%);
+  border-color: #1f7a3d;
+  opacity: 0.9;
 }
 .memo-card:not(.flipped):not(.matched) .memo-face { visibility: hidden; }
 
@@ -423,9 +472,10 @@ button:active { transform: scale(0.96); }
   position: relative;
   overflow: hidden;
   margin-top: 28px;
-  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-alt) 100%);
+  background: linear-gradient(90deg, var(--purple), var(--pink), var(--yellow), var(--green), var(--blue)) top / 100% 8px no-repeat,
+              linear-gradient(180deg, var(--panel) 0%, var(--panel-alt) 100%);
   border-radius: 24px;
-  padding: 28px 32px;
+  padding: 34px 32px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -441,7 +491,7 @@ button:active { transform: scale(0.96); }
 .win-panel::before, .win-panel::after {
   content: "";
   position: absolute;
-  top: 14px;
+  top: 20px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -451,7 +501,7 @@ button:active { transform: scale(0.96); }
 }
 .win-panel::before { left: 14px; }
 .win-panel::after { right: 14px; }
-.win-title { font-size: 26px; font-weight: bold; margin: 0; }
+.win-title { font-size: 26px; font-weight: 900; margin: 0; }
 .win-stars { font-size: 32px; margin: 0; animation: starPop 0.5s ease 0.15s backwards; filter: drop-shadow(0 3px 3px rgba(60,40,90,.25)); }
 .win-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 
@@ -492,6 +542,7 @@ button:active { transform: scale(0.96); }
   border-radius: 999px;
   margin: 0 0 20px;
   box-shadow: 0 2px 0 var(--shadow);
+  border: 2px solid var(--panel-line);
 }
 :root[data-theme="dark"] .mini-progress { color: #c9b8ff; }
 
@@ -507,6 +558,7 @@ button:active { transform: scale(0.96); }
   padding: 20px 24px;
   box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 8px 0 var(--shadow);
   max-width: 90%;
+  border: 2px solid var(--panel-line);
 }
 .sumas-group { letter-spacing: 2px; }
 .sumas-op { font-weight: bold; color: var(--purple); }
@@ -525,6 +577,7 @@ button:active { transform: scale(0.96); }
   border-radius: 24px;
   padding: 20px 32px;
   box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 8px 0 var(--shadow);
+  border: 2px solid var(--panel-line);
 }
 
 .sumas-choices {
@@ -536,17 +589,17 @@ button:active { transform: scale(0.96); }
 }
 
 .choice-btn {
-  background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 45%), linear-gradient(180deg, var(--yellow) 0%, var(--yellow-dark) 100%);
-  color: var(--text);
+  background: linear-gradient(180deg, rgba(255,255,255,.5) 0%, transparent 48%), linear-gradient(180deg, var(--yellow) 0%, var(--yellow-dark) 100%);
+  color: #6b4b00;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: 900;
   min-width: 72px;
   min-height: 72px;
   border-radius: 20px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 6px 0 rgba(0,0,0,0.15), 0 10px 16px var(--ambient-shadow);
-  border: 2px solid rgba(0,0,0,0.08);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 6px 0 #a87400, 0 12px 18px var(--ambient-shadow);
+  border: 3px solid #a87400;
 }
-.choice-btn.choice-correct { background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 45%), linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%); color: var(--white); }
+.choice-btn.choice-correct { background: linear-gradient(180deg, rgba(255,255,255,.5) 0%, transparent 48%), linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%); color: var(--white); box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 6px 0 #1f7a3d, 0 12px 18px var(--ambient-shadow); border-color: #1f7a3d; }
 .choice-btn.choice-shake { animation: shake 0.4s ease; }
 .choice-btn:disabled { opacity: 0.6; }
 
@@ -572,7 +625,7 @@ button:active { transform: scale(0.96); }
   flex: 1 1 130px;
   min-height: 120px;
   background: var(--panel);
-  background: color-mix(in srgb, var(--zone-color) 18%, var(--panel));
+  background: color-mix(in srgb, var(--zone-color) 22%, var(--panel));
   border: 3px dashed var(--zone-color);
   border-radius: 20px;
   padding: 10px;
@@ -606,6 +659,7 @@ button:active { transform: scale(0.96); }
   background: var(--panel);
   border-radius: 24px;
   box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 8px 0 var(--shadow);
+  border: 2px solid var(--panel-line);
 }
 
 .drag-item {
@@ -641,6 +695,7 @@ button:active { transform: scale(0.96); }
      la proporción 300x440 del canvas se conserva con height:auto */
   width: max(240px, min(100%, 380px, calc((100vh - 250px) * 0.68)));
   height: auto;
+  border: 3px solid var(--panel-line);
 }
 .carrera-canvas.hidden { display: none; }
 
@@ -653,14 +708,14 @@ button:active { transform: scale(0.96); }
 .carrera-controls.hidden { display: none; }
 
 .wide-btn {
-  background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 45%), linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 48%), linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
   color: var(--white);
   font-size: 30px;
   width: 84px;
   height: 68px;
   border-radius: 20px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 6px 0 rgba(0,0,0,0.15);
-  border: 2px solid rgba(0,0,0,0.08);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 6px 0 #16729e, 0 10px 16px var(--ambient-shadow);
+  border: 3px solid #16729e;
 }
 
 /* ---------- Grid genérico (laberinto y rompecabezas) ---------- */
@@ -739,19 +794,21 @@ button:active { transform: scale(0.96); }
   margin-bottom: 24px;
   min-height: 100px;
   justify-content: center;
+  border: 2px solid var(--panel-line);
 }
 .ingles-big-picture, .abc-picture { font-size: clamp(48px, 14vw, 80px); }
 .abc-word { font-size: 22px; font-weight: bold; color: var(--purple); }
 :root[data-theme="dark"] .abc-word { color: #c9b8ff; }
 .abc-instruction { font-size: 14px; font-weight: bold; color: var(--text); opacity: 0.6; }
 .ingles-replay {
-  background: linear-gradient(180deg, rgba(255,255,255,.4) 0%, transparent 45%), linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, transparent 48%), linear-gradient(180deg, var(--blue) 0%, var(--blue-dark) 100%);
   color: var(--white);
   width: 56px;
   height: 56px;
   border-radius: 50%;
   font-size: 24px;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 4px 0 rgba(0,0,0,0.15);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 4px 0 #16729e;
+  border: 2.5px solid #16729e;
 }
 
 .ingles-choices {
@@ -761,8 +818,8 @@ button:active { transform: scale(0.96); }
   justify-content: center;
 }
 .ingles-picture-btn {
-  background: var(--panel);
-  border: 4px solid var(--yellow);
+  background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), var(--panel);
+  border: 4px solid var(--yellow-dark);
   border-radius: 20px;
   font-size: clamp(36px, 10vw, 54px);
   width: 96px;
@@ -770,9 +827,9 @@ button:active { transform: scale(0.96); }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 6px 0 rgba(0,0,0,0.15);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.4), 0 6px 0 rgba(0,0,0,0.18);
 }
-.ingles-picture-btn.choice-correct { border-color: var(--green); background: color-mix(in srgb, var(--green) 14%, var(--panel)); }
+.ingles-picture-btn.choice-correct { border-color: #1f7a3d; background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), color-mix(in srgb, var(--green) 20%, var(--panel)); }
 .ingles-picture-btn.choice-shake { animation: shake 0.4s ease; }
 .ingles-word-btn {
   min-width: 110px;
@@ -800,17 +857,17 @@ button:active { transform: scale(0.96); }
   display: flex;
   align-items: center;
   gap: 14px;
-  background: var(--panel);
-  border: 3px solid var(--yellow);
+  background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), var(--panel);
+  border: 3px solid var(--yellow-dark);
   border-radius: 18px;
   padding: 14px 20px;
   font-size: 18px;
   font-weight: bold;
   color: var(--text);
   text-align: left;
-  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 6px 0 rgba(0,0,0,0.12);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.35), 0 6px 0 rgba(0,0,0,0.15);
 }
-.bc-option-btn.choice-correct { border-color: var(--green); background: color-mix(in srgb, var(--green) 14%, var(--panel)); }
+.bc-option-btn.choice-correct { border-color: #1f7a3d; background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), color-mix(in srgb, var(--green) 20%, var(--panel)); }
 .bc-option-btn.choice-shake { animation: shake 0.4s ease; }
 .bc-option-emoji { font-size: 30px; flex-shrink: 0; }
 
@@ -856,9 +913,9 @@ button:active { transform: scale(0.96); }
   border-radius: 16px;
   font-size: 28px;
   box-shadow: 0 4px 0 var(--shadow);
-  border: 3px solid transparent;
+  border: 3px solid var(--panel-line);
 }
-.avatar-btn.selected { border-color: var(--green); background: color-mix(in srgb, var(--green) 14%, var(--panel)); }
+.avatar-btn.selected { border-color: #1f7a3d; background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), color-mix(in srgb, var(--green) 22%, var(--panel)); }
 
 .archetype-grid {
   display: flex;
@@ -873,23 +930,15 @@ button:active { transform: scale(0.96); }
   padding: 16px 24px;
   border-radius: 20px;
   background: var(--panel);
-  border: 4px solid transparent;
+  border: 3px solid var(--panel-line);
   box-shadow: 0 6px 0 var(--shadow);
 }
-.archetype-card.selected { border-color: var(--purple); background: color-mix(in srgb, var(--purple) 12%, var(--panel)); }
+.archetype-card.selected { border-color: var(--purple-dark); background: linear-gradient(160deg, rgba(255,255,255,.4) 0%, transparent 45%), color-mix(in srgb, var(--purple) 18%, var(--panel)); }
 .archetype-emoji { font-size: 32px; }
 .archetype-label { font-weight: bold; }
 
-.profile-card-add {
-  border-style: dashed;
-  border-color: var(--text);
-  opacity: 0.7;
-}
-
 /* ---------- Categorías del menú y explicación de niveles ---------- */
 .category-card { min-height: 170px; flex-basis: 150px; }
-.category-count { font-size: 14px; color: var(--purple); font-weight: bold; }
-:root[data-theme="dark"] .category-count { color: #c9b8ff; }
 .category-blurb {
   margin: 0 0 18px;
   text-align: center;
@@ -943,8 +992,8 @@ button:active { transform: scale(0.96); }
 .choice-btn.choice-wrong,
 .ingles-picture-btn.choice-wrong,
 .bc-option-btn.choice-wrong {
-  background: color-mix(in srgb, var(--orange) 16%, var(--panel));
-  border-color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 22%, var(--panel));
+  border-color: var(--orange-dark);
   color: var(--text);
   opacity: 0.75;
 }
