@@ -432,8 +432,26 @@
 <script src="js/main.js"></script>
 <script>
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    // GitHub Pages sirve sw.js con "Cache-Control: max-age=600": sin
+    // updateViaCache:"none" el navegador puede reusar esa copia guardada
+    // hasta por 10 minutos y nunca enterarse de que hay una versión nueva,
+    // aunque la persona recargue varias veces. Con esto, cada comprobación
+    // de actualización va SIEMPRE a la red, nunca a esa caché.
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    // si ya había una versión controlando la página y entra una nueva
+    // (skipWaiting + clients.claim en sw.js), recargamos una sola vez para
+    // que se vea de inmediato sin que la persona tenga que hacerlo a mano
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (!hadController || reloaded) return;
+      reloaded = true;
+      location.reload();
+    });
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
+      navigator.serviceWorker
+        .register("sw.js", { updateViaCache: "none" })
+        .then((reg) => reg.update().catch(() => {}))
+        .catch(() => {});
     });
   }
 </script>
