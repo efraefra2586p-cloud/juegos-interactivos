@@ -6,7 +6,7 @@
 // IMPORTANTE: al agregar un archivo nuevo (ej. un juego nuevo en js/games/),
 // hay que sumarlo a APP_SHELL y subir CACHE_NAME (v1 -> v2...) para que los
 // dispositivos que ya instalaron la app bajen la versión nueva.
-const CACHE_NAME = "ji-cache-v6";
+const CACHE_NAME = "ji-cache-v7";
 const APP_SHELL = [
   "./",
   "index.html",

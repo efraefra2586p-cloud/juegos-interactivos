@@ -4,10 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Juegos Interactivos</title>
+<!-- Se aplica el tema (claro/oscuro) ANTES de pintar la página, para que no
+     se vea un parpadeo blanco al abrir con el tema oscuro elegido. -->
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("ji_theme");
+    if (!t) t = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { /* sin localStorage: se queda en modo claro */ }
+})();
+</script>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/aventura.css">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#7c5cff">
+<meta name="theme-color" content="#7c5cff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171233" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 </head>
@@ -26,6 +38,7 @@
 
   <!-- Pantalla 1: selector de perfil (tarjetas generadas por main.js) -->
   <section id="screen-profile" class="screen active">
+    <button class="icon-btn theme-toggle" id="btn-theme-profile" title="Cambiar a modo oscuro">🌙</button>
     <span class="mascot" aria-hidden="true">🦊</span>
     <h1 class="app-title">🎮 Juegos Interactivos</h1>
     <p class="subtitle">¿Quién va a jugar?</p>
@@ -70,7 +83,10 @@
         <span id="menu-profile-emoji">🐣</span>
         <span id="menu-stars" class="stars-total">⭐ 0</span>
       </div>
-      <button class="icon-btn" id="btn-speak-menu" title="Escuchar">🔊</button>
+      <div class="menu-header-right">
+        <button class="icon-btn theme-toggle theme-toggle-inline" id="btn-theme-menu" title="Cambiar a modo oscuro">🌙</button>
+        <button class="icon-btn" id="btn-speak-menu" title="Escuchar">🔊</button>
+      </div>
     </header>
 
     <h2 class="menu-heading">¿Qué quieres hacer hoy?</h2>

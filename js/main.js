@@ -579,6 +579,31 @@
     GameAudio.playClick();
     Panel.open();
   });
+
+  // ---- Modo claro / oscuro (el tema en sí ya se aplicó antes de pintar,
+  // ver el script en <head> de index.html; aquí solo conectamos el botón) ----
+  function syncThemeIcons() {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
+    document.querySelectorAll(".theme-toggle").forEach((b) => {
+      b.textContent = dark ? "☀️" : "🌙";
+      b.title = dark ? "Cambiar a modo claro" : "Cambiar a modo oscuro";
+    });
+  }
+  document.querySelectorAll(".theme-toggle").forEach((b) => {
+    b.addEventListener("click", () => {
+      GameAudio.playClick();
+      const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("ji_theme", next);
+      } catch (e) {
+        /* sin localStorage: el tema no se recuerda entre visitas, pero sigue funcionando */
+      }
+      syncThemeIcons();
+    });
+  });
+  syncThemeIcons();
+
   renderCategoryGrid();
   renderProfileGrid();
 

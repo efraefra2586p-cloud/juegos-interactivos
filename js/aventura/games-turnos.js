@@ -126,12 +126,15 @@
         ctx.setInstruction("👀", "Mira con atención.");
         msgEl.textContent = "Mira 👀";
         shownEl.textContent = errs >= 2 ? seq.map((k) => pads[k].label).join("  ·  ") : "";
+        // Solo color/tono durante la demostración automática: si aquí también
+        // se dijera el nombre en voz alta, un color cortaría al anterior a
+        // media palabra (el ritmo T es más corto que lo que tarda en decirse
+        // "amarillo"). El nombre en voz sí se dice cuando el niño TOCA un
+        // botón (más abajo, en onPad), porque ahí no hay una carrera de
+        // tiempos: solo se dice una palabra por toque.
         let t = 700;
         seq.forEach((k) => {
-          later(t, () => {
-            flash(k, T - 250);
-            if (variant !== "num") say(k);
-          });
+          later(t, () => flash(k, T - 250));
           t += T;
         });
         later(t + 150, () => {
@@ -166,12 +169,15 @@
         shownEl.textContent = "";
         ctx.setInstruction("🧠", "Recuerda el orden.");
         ctx.onReplay(() => ctx.say("Mira cómo se iluminan los botones y repite el orden."));
-        ctx.say("Mira cómo se iluminan los botones.");
-        playSequence();
+        // esperamos a que termine de decirse ANTES de empezar a mostrar la
+        // secuencia — si no, el primer destello (a los 700ms) cortaba la
+        // frase a la mitad cada vez.
+        ctx.say("Mira cómo se iluminan los botones.", playSequence);
       }
 
       function onPad(i) {
         if (playing || ctx.isPaused()) return;
+        const b = padsEl.querySelector(`[data-i="${i}"]`);
         flash(i, 320);
         if (variant !== "num") say(i);
         if (i === seq[pos]) {
@@ -187,12 +193,17 @@
             later(1300, newRound);
           }
         } else {
-          // sin castigo: se vuelve a mirar la secuencia y se intenta otra vez
+          // sin castigo: se avisa con un gesto suave (nunca un sonido de
+          // error) y se vuelve a mirar la secuencia para intentarlo de nuevo
           errs++;
           ctx.attempt({ ok: false });
           pos = 0;
           playing = true;
           setPadsEnabled(false);
+          if (b) {
+            b.classList.add("seq-wrong");
+            later(500, () => b.classList.remove("seq-wrong"));
+          }
           msgEl.textContent = errs >= 2 ? "Te ayudo: mira los números arriba." : "¡Casi! Miremos otra vez 👀";
           later(1200, playSequence);
         }
